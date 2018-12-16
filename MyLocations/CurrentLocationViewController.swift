@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -30,6 +31,9 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     var lastGeocodingError:NSError?
     var timer:Timer?
     
+    var managedObjectContext:NSManagedObjectContext!
+    
+    
     //MARK: - init method
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +45,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         let authStatus = CLLocationManager.authorizationStatus()
         
         if authStatus == .notDetermined {
-            
+            print("notDetermined")
         }
         
         if authStatus == .denied || authStatus == .restricted {
@@ -260,6 +264,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             let controller = navigationController.topViewController as! LocationDetailViewController
             controller.coordinate = location!.coordinate
             controller.placemark = placemark
+            controller.managedObjectContext = managedObjectContext
             
         } else {
             

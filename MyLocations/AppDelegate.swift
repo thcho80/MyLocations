@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        let tabBarController = window!.rootViewController as! UITabBarController
+        
+        if let tabBarViewControllers = tabBarController.viewControllers {
+            
+            let currentViewController = tabBarViewControllers[0] as! CurrentLocationViewController
+            currentViewController.managedObjectContext = managedObjectContext
+            
+        }
+        
         return true
     }
 
@@ -41,6 +51,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    //MARK - Core Data
 
+    lazy var managedObjectContext : NSManagedObjectContext = {
+       
+        guard let modelURL = Bundle.main.url(forResource: "MyLocation", withExtension: "momd") else { fatalError("Could not find data model in app bundle") }
+        guard let model = NSManagedObjectModel(contentsOf: modelURL) else { fatalError("Error initializing model from : \(modelURL)")}
+        
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentDirectory = urls[0]
+        
+        let storeURL = documentDirectory.appendingPathComponent("DataStore.sqlite")
+        
+        var error:NSError?
+        
+        do {
+            let coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+            let store = try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+            let context = NSManagedObjectContext()
+            context.persistentStoreCoordinator = coordinator
+            return context
+        } catch {fatalError("Error adding persistent store at \(storeURL): \(error)") }
+        
+    }()
 }
 

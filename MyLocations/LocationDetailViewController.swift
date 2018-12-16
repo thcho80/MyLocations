@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreLocation
+import Dispatch
+import CoreData
 
 private let dateFormatter:DateFormatter = {
     let formatter = DateFormatter()
@@ -32,6 +34,10 @@ class LocationDetailViewController:UITableViewController {
     
     var categoryName = "No Category"
     
+    var date = NSDate()
+    
+     var managedObjectContext: NSManagedObjectContext!
+    
     // MARK: - LocationDetailViewController initialization
     
     override func viewDidLoad() {
@@ -49,14 +55,52 @@ class LocationDetailViewController:UITableViewController {
             addressLabel.text = "No Address Found"
         }
         
-        dateLabel.text = formatDate(date: NSDate())
+        dateLabel.text = formatDate(date: date)
+        
+        let gestureRecognizer = UIGestureRecognizer(target: self, action: #selector(LocationDetailViewController.hideKeyboard(gestureRecognizer:)))
+        gestureRecognizer.cancelsTouchesInView = false
+        tableView.addGestureRecognizer(gestureRecognizer)
+        
     }
     
+    @objc func hideKeyboard(gestureRecognizer: UIGestureRecognizer){
+        let point = gestureRecognizer.location(in: tableView)
+        let indexPath = tableView.indexPathForRow(at: point)
+        
+        if indexPath != nil && indexPath?.section == 0 && indexPath?.row == 0 {
+            return
+        } else {
+            descriptionTextView.resignFirstResponder()
+        }
+    }
     // MARK: - Navigation Bar
     
     @IBAction func done(){
         print("DescriptionText: \(descriptionText)")
-        dismiss(animated: true, completion: nil)
+        
+        let hudView = HudView.hudInView(view: navigationController!.view, animated: true)
+        hudView.text = "Tagged"
+        
+        let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: managedObjectContext) as! Location
+        
+        location.locationDescription = descriptionText
+        location.category = categoryName
+        location.latitude = coordinate.latitude
+        location.longitude = coordinate.longitude
+        location.date = date
+        location.placemark = placemark
+
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("error \(error)")
+            abort()
+        }
+     
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {
+            self.dismiss(animated: true, completion: nil)
+        })
+        
     }
     
     @IBAction func cancel(){
@@ -88,6 +132,22 @@ class LocationDetailViewController:UITableViewController {
             return addressLabel.frame.size.height + 20
         } else {
             return 44
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if indexPath.section == 0 || indexPath.section == 1 {
+            return indexPath
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        if indexPath.section == 0 && indexPath.row == 0 {
+            descriptionTextView.becomeFirstResponder()
         }
     }
     
