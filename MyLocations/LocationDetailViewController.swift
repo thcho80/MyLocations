@@ -93,8 +93,8 @@ class LocationDetailViewController:UITableViewController {
         do {
             try managedObjectContext.save()
         } catch {
-            print("error \(error)")
-            abort()
+            fatalCoreDataError(error: error as NSError)
+            return
         }
      
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: {

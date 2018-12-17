@@ -45,11 +45,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         let authStatus = CLLocationManager.authorizationStatus()
         
         if authStatus == .notDetermined {
-            print("notDetermined")
+            locationManager.requestWhenInUseAuthorization()
+            return
         }
         
         if authStatus == .denied || authStatus == .restricted {
-            
+            showLocationServicesDeniedAlert()
+            return
         }
         
         if updatingLocation {

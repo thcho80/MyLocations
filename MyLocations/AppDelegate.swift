@@ -9,12 +9,56 @@
 import UIKit
 import CoreData
 
+
+let MyManagedObjectContextSaveDidFailNotification = "MyManagedObjectContextSaveDidFailNotification"
+
+func fatalCoreDataError (error:NSError?) {
+    if let error = error {
+        print("*** Fatal error: \(error), \(error.userInfo)")
+    }
+    NotificationCenter.default.post(name: NSNotification.Name(rawValue: MyManagedObjectContextSaveDidFailNotification), object: error)
+}
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    func listenForFatalCoreDataNotification(){
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: MyManagedObjectContextSaveDidFailNotification), object: nil, queue: OperationQueue.main, using: {notification in
+            
+            let alert = UIAlertController(title: "Internal Error",
+                                          message: "There was a fatal error in the app and it cannot continue.\n\n" +
+                                                    "Press OK to terminate the app. Sorry",
+                                          preferredStyle: .alert)
+            
+            let action = UIAlertAction(title: "OK", style: .default, handler: {_ in
+                let exception = NSException(name: NSExceptionName.internalInconsistencyException
+                                            , reason: "Fatal CoreData Error"
+                                            , userInfo: nil)
+                
+                print("*** \(#function)")
+                exception.raise()
+            })
+            
+            alert.addAction(action)
+            
+            self.viewControllerForShowingAlert().present(alert, animated: true, completion: nil)
+            
+        })
+    }
 
+    func viewControllerForShowingAlert() -> UIViewController {
+        let rootViewController = self.window!.rootViewController!
+        if let presentViewController = rootViewController.presentedViewController {
+            return presentViewController
+        } else {
+            return rootViewController
+        }
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let tabBarController = window!.rootViewController as! UITabBarController
@@ -25,6 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             currentViewController.managedObjectContext = managedObjectContext
             
         }
+        
+        listenForFatalCoreDataNotification()
         
         return true
     }
