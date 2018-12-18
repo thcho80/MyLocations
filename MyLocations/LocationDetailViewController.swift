@@ -36,13 +36,29 @@ class LocationDetailViewController:UITableViewController {
     
     var date = NSDate()
     
-     var managedObjectContext: NSManagedObjectContext!
+    var managedObjectContext: NSManagedObjectContext!
+    
+    var locationToEdit:Location? {
+        didSet {
+            if let location = locationToEdit {
+                descriptionText = location.locationDescription!
+                categoryName = location.category!
+                date = location.date!
+                coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
+                placemark = location.placemark
+            }
+        }
+    }
     
     // MARK: - LocationDetailViewController initialization
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        if let location = locationToEdit {
+            title = "Edit Location"
+        }
         
         descriptionTextView.text = descriptionText
         categoryLabel.text = categoryName
@@ -79,9 +95,15 @@ class LocationDetailViewController:UITableViewController {
         print("DescriptionText: \(descriptionText)")
         
         let hudView = HudView.hudInView(view: navigationController!.view, animated: true)
-        hudView.text = "Tagged"
+        var location:Location
         
-        let location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: managedObjectContext) as! Location
+        if let temp = locationToEdit {
+            hudView.text = "Updated"
+            location = temp
+        } else {
+            hudView.text = "Tagged"
+            location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: managedObjectContext) as! Location
+        }
         
         location.locationDescription = descriptionText
         location.category = categoryName
