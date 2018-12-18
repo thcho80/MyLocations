@@ -54,10 +54,24 @@ class LocationsViewController:UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let location = fetchedResultsController.object(at: indexPath) as! Location
+            managedObjectContext.delete(location)
+            
+            do {
+                try managedObjectContext.save()
+            } catch {
+                fatalCoreDataError(error: error as NSError)
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
         performFetch()
+        
+        self.navigationItem.rightBarButtonItem = editButtonItem
     }
     
     func performFetch(){
@@ -88,18 +102,18 @@ class LocationsViewController:UITableViewController {
 
 
 extension LocationsViewController:NSFetchedResultsControllerDelegate {
- 
+
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         print("*** \(#function)")
         tableView.beginUpdates()
     }
-    
+
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
+
         switch type {
         case .insert:
             print("*** NSFetchedResultsChange insert (object)")
-            tableView.insertRows(at: [indexPath!], with: .fade)
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
         case .delete:
             print("*** NSFetchedResultsChange delete (object)")
             tableView.deleteRows(at: [indexPath!], with: .fade)
@@ -114,9 +128,9 @@ extension LocationsViewController:NSFetchedResultsControllerDelegate {
             tableView.insertRows(at: [newIndexPath!], with: .fade)
         }
     }
-    
+
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        
+
         switch type {
         case .insert:
             print("*** NSFetchedResultsChange insert (section)")
@@ -128,10 +142,10 @@ extension LocationsViewController:NSFetchedResultsControllerDelegate {
             print("*** NSFetchedResultsChange update (section)")
         case .move:
             print("*** NSFetchedResultsChange move (section)")
-            
+
         }
     }
-    
+
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         print("*** \(#function)")
         tableView.endUpdates()
