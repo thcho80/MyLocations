@@ -71,7 +71,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let navigationController = tabBarViewControllers[1] as! UINavigationController
             let locationViewController = navigationController.viewControllers[0] as! LocationsViewController
             locationViewController.managedObjectContext = managedObjectContext
-//            let forceTheViewToLoad = locationViewController.view
+            
+            let mapViewController = tabBarViewControllers[2] as! MapViewController
+            mapViewController.managedObjectContext = managedObjectContext
         }
         
         

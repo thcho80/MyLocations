@@ -10,6 +10,7 @@
 import Foundation
 import CoreData
 import CoreLocation
+import MapKit
 
 extension Location {
 
@@ -24,4 +25,31 @@ extension Location {
     @NSManaged public var category: String?
     @NSManaged public var placemark: CLPlacemark?
 
+}
+
+extension Location: MKAnnotation {
+    
+    public var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2DMake(latitude, longitude)
+    }
+    
+    public var title: String? {
+        if let locationDescription = locationDescription {
+            return locationDescription
+        } else {
+            return "(No Description)"
+        }
+//        if (locationDescription?.isEmpty)! {
+//            return "(No Description)"
+//        }else {
+//            print(locationDescription!)
+//
+//            return locationDescription
+//        }
+    }
+
+    public var subtitle: String? {
+        return category
+    }
+    
 }
