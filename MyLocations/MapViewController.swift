@@ -14,7 +14,15 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView:MKMapView!
     
-    var managedObjectContext:NSManagedObjectContext!
+    var managedObjectContext:NSManagedObjectContext! {
+        didSet {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: managedObjectContext, queue: OperationQueue.main, using: { _ in
+                if self.isViewLoaded {
+                    self.updateLocations()
+                }
+            })
+        }
+    }
     
     var locations = [Location]()
     
@@ -95,19 +103,28 @@ class MapViewController: UIViewController {
         return mapView.regionThatFits(region)
     }
     
-    @objc func showLocationDetails(_:UIButton) {
-        
+    @objc func showLocationDetails(sender:UIButton) {
+        performSegue(withIdentifier: "EditLocation", sender: sender)
     }
     
-    /*
+    
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+       
+        if segue.identifier == "EditLocation" {
+            let navigationController = segue.destination as! UINavigationController
+            
+            let controller = navigationController.topViewController as! LocationDetailViewController
+            
+            controller.managedObjectContext = managedObjectContext
+            
+            let button = sender as! UIButton
+            let location = locations[button.tag]
+            
+            controller.locationToEdit = location
+        }
     }
-    */
+    
 
 }
 
@@ -130,7 +147,7 @@ extension MapViewController: MKMapViewDelegate {
                 annotationView!.pinTintColor = .green
                 
                 let rightButton = UIButton.init(type: .detailDisclosure)
-                rightButton.addTarget(self, action: #selector(MapViewController.showLocationDetails(_:)), for: .touchUpInside)
+                rightButton.addTarget(self, action: #selector(MapViewController.showLocationDetails(sender:)), for: .touchUpInside)
                 annotationView!.rightCalloutAccessoryView = rightButton
             } else {
                 annotationView!.annotation = annotation
