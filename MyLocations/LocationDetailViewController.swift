@@ -64,13 +64,15 @@ class LocationDetailViewController:UITableViewController {
         }
     }
     
+    var observer:AnyObject!
+    
     // MARK: - LocationDetailViewController initialization
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        if let location = locationToEdit {
+        if locationToEdit != nil {
             title = "Edit Location"
         }
         
@@ -91,6 +93,12 @@ class LocationDetailViewController:UITableViewController {
         gestureRecognizer.cancelsTouchesInView = false
         tableView.addGestureRecognizer(gestureRecognizer)
         
+        listenForBackgroundNotification()
+    }
+
+    deinit {
+        print("*** deinit \(self)")
+        NotificationCenter.default.removeObserver(observer)
     }
     
     @objc func hideKeyboard(gestureRecognizer: UIGestureRecognizer){
@@ -117,6 +125,7 @@ class LocationDetailViewController:UITableViewController {
         } else {
             hudView.text = "Tagged"
             location = NSEntityDescription.insertNewObject(forEntityName: "Location", into: managedObjectContext) as! Location
+            location.photoID = nil
         }
         
         location.locationDescription = descriptionText
@@ -126,6 +135,20 @@ class LocationDetailViewController:UITableViewController {
         location.date = date
         location.placemark = placemark
 
+        if let image = image {
+            if !location.hasPhoto {
+                location.photoID = Location.nextPhotoID() as NSNumber
+            }
+            
+            let data = image.jpegData(compressionQuality: 0.5)
+  
+            do {
+                try data?.write(to: location.photoPath, options: .atomic)
+            } catch {
+                print("Error writing file: \(error)")
+            }
+        }
+        
         do {
             try managedObjectContext.save()
         } catch {
@@ -159,23 +182,6 @@ class LocationDetailViewController:UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if indexPath.section == 0 && indexPath.row == 0 {
-//            return 88
-//        } else if indexPath.section == 1 {
-//            if imageView.isHidden {
-//                return 44
-//            }else {
-//                return CGFloat(imageHeight + 20) // margin:up(10) + down(10)
-//            }
-//        } else if indexPath.section == 2 && indexPath.row == 2{
-//            addressLabel.frame.size = CGSize(width:view.bounds.size.width - 115, height:10000)
-//            addressLabel.sizeToFit()
-//            addressLabel.frame.origin.x = view.bounds.size.width - addressLabel.frame.size.width - 15
-//            return addressLabel.frame.size.height + 20
-//        } else {
-//            return 44
-//        }
-        
         switch(indexPath.section, indexPath.row){
         case(0,0):
             return 88
@@ -239,6 +245,23 @@ class LocationDetailViewController:UITableViewController {
         
     }
     
+    func listenForBackgroundNotification(){
+        
+        observer = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+                                               object: nil,
+                                               queue: OperationQueue.main,
+                                               using: {
+                                                [weak self] _ in
+                                                if let strongSelf = self {
+                                                    if strongSelf.presentedViewController != nil {
+                                                        print("*** closure called")
+                                                        strongSelf.dismiss(animated: false, completion: nil)
+                                                    }
+                                                    strongSelf.descriptionTextView.resignFirstResponder()
+                                                }
+
+        })
+    }
 }
 
 extension LocationDetailViewController:UITextViewDelegate {

@@ -24,6 +24,40 @@ extension Location {
     @NSManaged public var locationDescription: String?
     @NSManaged public var category: String?
     @NSManaged public var placemark: CLPlacemark?
+    @NSManaged public var photoID:NSNumber?
+
+    var hasPhoto:Bool {
+        return photoID != nil
+    }
+    
+    var photoPath:URL {
+        assert(photoID != nil, "No photo ID set")
+        let filename =  "Photo-\(photoID!.int32Value).jpg"
+        
+        let storeURL = applicationDocumentsDirectory.appendingPathComponent(filename)
+        
+  print(storeURL)
+        
+        return storeURL
+        
+    }
+    
+    var photoImage: UIImage? {
+        return UIImage(contentsOfFile: photoPath.absoluteString)
+    }
+    
+    class func nextPhotoID() -> Int {
+        let userDefaults = UserDefaults.standard
+        let currentID = userDefaults.integer(forKey: "PhotoID")
+        print("before : \(currentID)")
+        userDefaults.set(currentID + 1, forKey: "PhotoID")
+        userDefaults.synchronize()
+        
+        print("before : \(currentID)")
+        return currentID
+       
+        
+    }
 
 }
 
@@ -51,5 +85,7 @@ extension Location: MKAnnotation {
     public var subtitle: String? {
         return category
     }
+    
+    
     
 }
