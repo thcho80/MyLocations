@@ -58,6 +58,7 @@ class LocationsViewController:UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let location = fetchedResultsController.object(at: indexPath) as! Location
+            location.removePhotoFile()
             managedObjectContext.delete(location)
             
             do {
@@ -115,7 +116,6 @@ class LocationsViewController:UITableViewController {
 extension LocationsViewController:NSFetchedResultsControllerDelegate {
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("*** \(#function)")
         tableView.beginUpdates()
     }
 
@@ -158,7 +158,6 @@ extension LocationsViewController:NSFetchedResultsControllerDelegate {
     }
 
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("*** \(#function)")
         tableView.endUpdates()
     }
 }

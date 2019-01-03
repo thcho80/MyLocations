@@ -160,7 +160,6 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     
     func updateLabels(){
-        print(#function)
         
         if let location = location {
             latitudeLabel.text = String(format: "%.8f", location.coordinate.latitude)
@@ -204,7 +203,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     
     func stopLocationManager(){
-        print(#function)
+
         if updatingLocation {
             locationManager.stopUpdatingLocation()
             locationManager.delegate = nil
@@ -216,7 +215,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     
     func startLocationManager(){
-        print(#function)
+
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters

@@ -39,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                             , reason: "Fatal CoreData Error"
                                             , userInfo: nil)
                 
-                print("*** \(#function)")
                 exception.raise()
             })
             

@@ -23,6 +23,7 @@
 		6596147A21C242AE00FC5112 /* MyLocation.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6596147821C242AE00FC5112 /* MyLocation.xcdatamodeld */; };
 		6596149121C246B400FC5112 /* Location+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6596148F21C246B400FC5112 /* Location+CoreDataClass.swift */; };
 		6596149221C246B400FC5112 /* Location+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6596149021C246B400FC5112 /* Location+CoreDataProperties.swift */; };
+		65A244FF21DDB35900D115E3 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A244FE21DDB35900D115E3 /* UIImage+Resize.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		6596147921C242AE00FC5112 /* MyLocation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyLocation.xcdatamodel; sourceTree = "<group>"; };
 		6596148F21C246B400FC5112 /* Location+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6596149021C246B400FC5112 /* Location+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		65A244FE21DDB35900D115E3 /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				6557FE6821BA2D6600EEB89F /* Main.storyboard */,
 				6596147821C242AE00FC5112 /* MyLocation.xcdatamodeld */,
 				6551815621DC90A600ABEB96 /* Functions.swift */,
+				65A244FE21DDB35900D115E3 /* UIImage+Resize.swift */,
 			);
 			path = MyLocations;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				65144B8621C1EEB0005D84E7 /* HudView.swift in Sources */,
 				6551815721DC90A600ABEB96 /* Functions.swift in Sources */,
 				6596149121C246B400FC5112 /* Location+CoreDataClass.swift in Sources */,
+				65A244FF21DDB35900D115E3 /* UIImage+Resize.swift in Sources */,
 				654F12E821C73C3900C36593 /* LocationsViewController.swift in Sources */,
 				654F12EC21C8A1BC00C36593 /* MapViewController.swift in Sources */,
 				6596149221C246B400FC5112 /* Location+CoreDataProperties.swift in Sources */,

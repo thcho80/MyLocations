@@ -49,20 +49,21 @@ class LocationDetailViewController:UITableViewController {
     var imageHeight:Int!
     let imageWidth = 260
     
-    var image:UIImage?{
-        didSet {
-            if let image = image {
-                
-                let ratio = image.size.height / image.size.width
-                imageHeight =  Int(260 * ratio)
-                
-                imageView.image = image
-                imageView.isHidden = false
-                imageView.frame = CGRect(x: 10, y: 10, width: imageWidth, height: imageHeight)
-                addPhotoLabel.isHidden = true
-            }
-        }
-    }
+    var image: UIImage?
+//    var image:UIImage?{
+//        didSet {
+//            if let image = image {
+//
+//                let ratio = image.size.height / image.size.width
+//                imageHeight =  Int(260 * ratio)
+//
+//                imageView.image = image
+//                imageView.isHidden = false
+//                imageView.frame = CGRect(x: 10, y: 10, width: imageWidth, height: imageHeight)
+//                addPhotoLabel.isHidden = true
+//            }
+//        }
+//    }
     
     var observer:AnyObject!
     
@@ -71,11 +72,7 @@ class LocationDetailViewController:UITableViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        if locationToEdit != nil {
-            title = "Edit Location"
-        }
-        
+  
         descriptionTextView.text = descriptionText
         categoryLabel.text = categoryName
         latitudeLabel.text = String(format: "%.8f", coordinate.latitude)
@@ -85,6 +82,17 @@ class LocationDetailViewController:UITableViewController {
             addressLabel.text = stringFromPlacemark(placemark: placemark)
         } else {
             addressLabel.text = "No Address Found"
+        }
+        
+        if let location = locationToEdit {
+            title = "Edit Location"
+            
+            if location.hasPhoto {
+                if let image = location.photoImage {
+                    showImage(image: image)
+                    descriptionTextView.text = descriptionText + location.photoURL.lastPathComponent
+                }
+            }
         }
         
         dateLabel.text = formatDate(date: date)
@@ -114,7 +122,6 @@ class LocationDetailViewController:UITableViewController {
     // MARK: - Navigation Bar
     
     @IBAction func done(){
-        print("DescriptionText: \(descriptionText)")
         
         let hudView = HudView.hudInView(view: navigationController!.view, animated: true)
         var location:Location
@@ -143,7 +150,7 @@ class LocationDetailViewController:UITableViewController {
             let data = image.jpegData(compressionQuality: 0.5)
   
             do {
-                try data?.write(to: location.photoPath, options: .atomic)
+                try data?.write(to: location.photoURL, options: .atomic)
             } catch {
                 print("Error writing file: \(error)")
             }
@@ -182,11 +189,12 @@ class LocationDetailViewController:UITableViewController {
     // MARK: - UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         switch(indexPath.section, indexPath.row){
         case(0,0):
             return 88
         case(1,_):
-            return imageView.isHidden ? 44 : CGFloat(imageHeight + 20)
+            return imageView.isHidden ? 44 : 280
         case(2,2):
             addressLabel.frame.size = CGSize(width:view.bounds.size.width - 115, height:10000)
             addressLabel.sizeToFit()

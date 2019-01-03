@@ -388,24 +388,29 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9gB-Kn-wCI">
-                                            <rect key="frame" x="16" y="29" width="343" height="17"/>
+                                            <rect key="frame" x="82" y="29" width="271" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="100" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4Sf-r7-TEZ">
-                                            <rect key="frame" x="16" y="11" width="343" height="21"/>
+                                            <rect key="frame" x="82" y="11" width="271" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="12z-jI-3xz">
+                                            <rect key="frame" x="15" y="2" width="52" height="52"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="addressLabel" destination="9gB-Kn-wCI" id="0wb-4k-gBj"/>
                                     <outlet property="descriptionLabel" destination="4Sf-r7-TEZ" id="Nqw-PB-oll"/>
+                                    <outlet property="photoImageView" destination="12z-jI-3xz" id="Txx-Qp-efM"/>
                                     <segue destination="bZU-mQ-z3K" kind="modal" identifier="EditLocation" id="xdD-vl-M2c"/>
                                 </connections>
                             </tableViewCell>
@@ -419,7 +424,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N9W-s8-Bvv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1457" y="-78"/>
+            <point key="canvasLocation" x="1456.8" y="-78.710644677661179"/>
         </scene>
         <!--Map-->
         <scene sceneID="YsC-Vo-Aib">
@@ -507,6 +512,6 @@
         <image name="first" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Rn9-iC-TF0"/>
+        <segue reference="xdD-vl-M2c"/>
     </inferredMetricsTieBreakers>
 </document>

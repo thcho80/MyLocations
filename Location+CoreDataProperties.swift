@@ -30,33 +30,39 @@ extension Location {
         return photoID != nil
     }
     
-    var photoPath:URL {
+    var photoURL:URL {
         assert(photoID != nil, "No photo ID set")
         let filename =  "Photo-\(photoID!.int32Value).jpg"
+        let fileURL = applicationDocumentsDirectory.appendingPathComponent(filename)
         
-        let storeURL = applicationDocumentsDirectory.appendingPathComponent(filename)
-        
-  print(storeURL)
-        
-        return storeURL
-        
+        return fileURL
     }
     
     var photoImage: UIImage? {
-        return UIImage(contentsOfFile: photoPath.absoluteString)
+        return UIImage(contentsOfFile: photoURL.path)
+    }
+    
+    func removePhotoFile(){
+        if hasPhoto {
+            let path = photoURL.path
+            let fileManager = FileManager.default
+            
+            if fileManager.fileExists(atPath: path) {
+                do {
+                    try fileManager.removeItem(atPath: path)
+                } catch {
+                    print("Error removing file: \(error)")
+                }
+            }
+        }
     }
     
     class func nextPhotoID() -> Int {
         let userDefaults = UserDefaults.standard
         let currentID = userDefaults.integer(forKey: "PhotoID")
-        print("before : \(currentID)")
         userDefaults.set(currentID + 1, forKey: "PhotoID")
-        userDefaults.synchronize()
         
-        print("before : \(currentID)")
         return currentID
-       
-        
     }
 
 }
