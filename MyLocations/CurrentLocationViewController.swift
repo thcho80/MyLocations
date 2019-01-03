@@ -226,6 +226,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     
     func configureGetButton(){
+        
         if updatingLocation {
             getButton.setTitle("Stop", for: .normal)
         } else {
@@ -235,16 +236,18 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     
     //MARK: - Reverse Geocoding
     func stringFromPlacemark(placemark:CLPlacemark) -> String {
-        print("placemark \(placemark)")
-
-        return "\(placemark.subThoroughfare ?? "") \(placemark.thoroughfare ?? "")" +
-        " \(placemark.locality ?? "") \(placemark.administrativeArea ?? "") \(placemark.postalCode ?? "")"
-
+        var line = ""
+        line.addText(text: placemark.subThoroughfare)
+        line.addText(text: placemark.thoroughfare, withSeparator: " ")
+        line.addText(text: placemark.locality, withSeparator: ", ")
+        line.addText(text: placemark.administrativeArea, withSeparator: ", ")
+        line.addText(text: placemark.postalCode, withSeparator: " ")
+        line.addText(text: placemark.country, withSeparator: ", ")        
+        return line
     }
     
     @objc func didTimeOut(){
         print("*** Time out")
-        print("location: \(location)")
         
         if location == nil {
             lastLocationError = NSError(domain: "MyLocationErrorDomain", code: 1, userInfo: nil)

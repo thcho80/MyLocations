@@ -90,7 +90,6 @@ class LocationDetailViewController:UITableViewController {
             if location.hasPhoto {
                 if let image = location.photoImage {
                     showImage(image: image)
-                    descriptionTextView.text = descriptionText + location.photoURL.lastPathComponent
                 }
             }
         }
@@ -175,11 +174,16 @@ class LocationDetailViewController:UITableViewController {
     
     // MARK: - Util Functions
     func stringFromPlacemark(placemark:CLPlacemark) -> String {
-        print("placemark \(placemark)")
         
-        return "\(placemark.subThoroughfare ?? "") \(placemark.thoroughfare ?? "")" +
-        " \(placemark.locality ?? "") \(placemark.administrativeArea ?? "") \(placemark.postalCode ?? "") \(placemark.country ?? "")"
+        var line = ""
+        line.addText(text: placemark.subThoroughfare)
+        line.addText(text: placemark.thoroughfare, withSeparator: " ")
+        line.addText(text: placemark.locality, withSeparator: ", ")
+        line.addText(text: placemark.administrativeArea, withSeparator: ", ")
+        line.addText(text: placemark.postalCode, withSeparator: " ")
+        line.addText(text: placemark.country, withSeparator: ", ")
         
+        return line
     }
     
     func formatDate(date:NSDate)->String {
