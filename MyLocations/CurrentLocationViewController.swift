@@ -39,6 +39,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         super.viewDidLoad()
         updateLabels()
         configureGetButton()
+        setNeedsStatusBarAppearanceUpdate()
+        
     }
     
     @IBAction func getLocation(){
@@ -242,7 +244,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         line.addText(text: placemark.locality, withSeparator: ", ")
         line.addText(text: placemark.administrativeArea, withSeparator: ", ")
         line.addText(text: placemark.postalCode, withSeparator: " ")
-        line.addText(text: placemark.country, withSeparator: ", ")        
+        line.addText(text: placemark.country, withSeparator: ", ")
         return line
     }
     
