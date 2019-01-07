@@ -17,6 +17,20 @@ class LocationCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        backgroundColor = UIColor.black
+        descriptionLabel.textColor = UIColor.white
+        descriptionLabel.highlightedTextColor = descriptionLabel.textColor
+        addressLabel.textColor = UIColor(white: 1.0, alpha: 0.4)
+        addressLabel.highlightedTextColor = addressLabel.textColor
+        
+        let selectionView = UIView(frame: CGRect.zero)
+        selectionView.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+        selectedBackgroundView = selectionView
+        
+//        descriptionLabel.backgroundColor = UIColor.red
+//        addressLabel.backgroundColor = UIColor.red
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -25,9 +39,16 @@ class LocationCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func configureForLocation(location:Location){
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
-        print(location)
+        if let sv = superview {
+            descriptionLabel.frame.size.width = sv.frame.size.width - descriptionLabel.frame.origin.x - 10
+            addressLabel.frame.size.width = sv.frame.size.width - addressLabel.frame.origin.x - 10
+        }
+    }
+    
+    func configureForLocation(location:Location){
         
         if (location.locationDescription?.isEmpty)! {
             descriptionLabel.text = "(No Description)"
@@ -46,6 +67,7 @@ class LocationCell: UITableViewCell {
         }
         
         photoImageView.image = imageForLocation(location: location)
+        
     }
     
     func imageForLocation(location:Location)->UIImage {
@@ -54,7 +76,7 @@ class LocationCell: UITableViewCell {
                 return image.resizedImageWithBounds(bounds: CGSize(width: 52, height: 52))
             }
         }
-        return UIImage()
+        return UIImage(named: "No Photo")!
     }
 
 }

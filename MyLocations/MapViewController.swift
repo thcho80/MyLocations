@@ -34,6 +34,7 @@ class MapViewController: UIViewController {
     
     @IBAction func showLocation(){
         let region = regionForAnnotation(annotations: locations)
+        
         mapView.setRegion(region, animated: true)
         
     }
@@ -145,6 +146,7 @@ extension MapViewController: MKMapViewDelegate {
                 annotationView!.canShowCallout = true
                 annotationView!.animatesDrop = true
                 annotationView!.pinTintColor = .green
+                annotationView!.tintColor = UIColor(white: 0.0, alpha: 0.5)
                 
                 let rightButton = UIButton.init(type: .detailDisclosure)
                 rightButton.addTarget(self, action: #selector(MapViewController.showLocationDetails(sender:)), for: .touchUpInside)

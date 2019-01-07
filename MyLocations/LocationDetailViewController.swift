@@ -101,6 +101,19 @@ class LocationDetailViewController:UITableViewController {
         tableView.addGestureRecognizer(gestureRecognizer)
         
         listenForBackgroundNotification()
+        
+        tableView.backgroundColor = UIColor.black
+        tableView.separatorColor = UIColor(white: 1.0, alpha: 0.2)
+        tableView.indicatorStyle = .white
+        
+        descriptionTextView.textColor = UIColor.white
+        descriptionTextView.backgroundColor = UIColor.black
+        
+        addPhotoLabel.textColor = UIColor.white
+        addPhotoLabel.highlightedTextColor = addPhotoLabel.textColor
+        
+        addressLabel.textColor = UIColor(white: 1.0, alpha: 0.4)
+        addressLabel.highlightedTextColor = addressLabel.textColor
     }
 
     deinit {
@@ -134,7 +147,7 @@ class LocationDetailViewController:UITableViewController {
             location.photoID = nil
         }
         
-        location.locationDescription = descriptionText
+        location.locationDescription = descriptionTextView.text
         location.category = categoryName
         location.latitude = coordinate.latitude
         location.longitude = coordinate.longitude
@@ -273,6 +286,30 @@ class LocationDetailViewController:UITableViewController {
                                                 }
 
         })
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.black
+        
+        if let textLabel = cell.textLabel {
+            textLabel.textColor = UIColor.white
+            textLabel.highlightedTextColor = textLabel.textColor
+        }
+        
+        if let detailLabel = cell.detailTextLabel {
+            detailLabel.textColor = UIColor(white: 1.0, alpha: 0.4)
+            detailLabel.highlightedTextColor = detailLabel.textColor
+        }
+        
+        let selectionView = UIView(frame: CGRect.zero)
+        selectionView.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+        cell.selectedBackgroundView = selectionView
+        
+        if indexPath.row == 2 {
+            let addressLabel = cell.viewWithTag(100) as! UILabel
+            addressLabel.textColor = UIColor.white
+            addressLabel.highlightedTextColor = addressLabel.textColor
+        }
     }
 }
 
